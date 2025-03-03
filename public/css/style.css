@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+body {
+    background-color: #151515;
+    margin: 0;
+    padding: 0;
+}
+
+body, input, button {
+    font-family: 'Nunito', sans-serif; /* Set the global font family here */
+}
+
+input {
+    background-color: #252525;
+    padding: 12px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 17.5px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: white;
+}
+
+h1 {
+    font-size: 3rem;
+}
+
+h2 {
+    font-size: 2rem;
+}  
+
+button {
+    font-size: medium;
+    font-size: 17.5px;
+    padding: 12px;
+    cursor: pointer;
+}
+
+.center-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+}
+
+.logo-large {
+    width: 150px;
+}
+
+.setup-form {
+    width: 300px;
+}
+
+
+.main-button {
+    border-radius: 5px;
+    padding: 10px;
+    border: none;
+    /* gradient background */
+    background: linear-gradient(90deg, #87c540 0%, #6acef1 100%);
+    color: white;
+    font-weight: bold;
+}
+
+

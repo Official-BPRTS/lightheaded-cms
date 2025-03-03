@@ -1,0 +1,31 @@
+<% if (step === 1) { %>
+    <h1>Step 1</h1>
+    <h2>Setup Database</h2>
+    <form action="POST">
+        <label for="database-name"></label>
+        <input type="text" name="database-name" id="database-name" placeholder="Database Name">
+    </form>
+<% } else if (step === 2) { %>
+    <h1>Step 2</h1>
+    <h2>Setup User</h2>
+    <form action="POST">
+        <label for="username"></label>
+        <input type="text" name="username" id="username" placeholder="Username">
+        <label for="password"></label>
+        <input type="password" name="password" id="password" placeholder="Password">
+        <button type="submit">Login</button>
+    </form>
+<% } else if (step === 3) { %>
+    <div class="center-div">
+        <img class="logo-large" src="/assets/images/LH-Color.svg" alt="">
+        <h1>Step 3</h1>
+        <h2>Register User</h2>
+        <form class="setup-form" action="POST">
+            <input type="text" name="username" id="username" placeholder="Username">
+            <input type="email" name="email" id="email" placeholder="Email">
+            <input type="password" name="password" id="password" placeholder="Password">
+            <input type="password" name="confirm-password" id="confirm-password" placeholder="Confirm Password">
+            <button class="main-button" type="submit">Register</button>
+        </form>
+    </div>
+<% } %>

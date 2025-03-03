@@ -1,0 +1,18 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "116.202.134.139",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "lightheaded-cms",
+            "password": "VFjG97ATZKvEDstaXhBwnuHpA",
+            "username": "bprtscom_bprtscom",
+            "database": "bprtscom_headless_cms"
+        }
+    ]
+}
