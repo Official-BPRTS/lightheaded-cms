@@ -1,15 +1,14 @@
-const Database = require('../logic/database-processor');
+const logicController = require('../controllers/logic-controller');
 
 class User {
     constructor() {
-        this.db = new Database();
-        this.db.connect();
+        this.databaseProcessor = logicController.databaseProcessor;
     }
     
     async checkUsers(req, res, next) {
         try {
-            const [rows] = await this.db.connection.promise().query('SELECT COUNT(*) AS count FROM users');
-            const userCount = rows[0].count;
+            const users = await this.databaseProcessor.data.get('users');
+            const userCount = users.length;
             if (userCount === 0) {
                 return res.redirect('/setup');
             }

@@ -1,20 +1,18 @@
-const Database = require('../logic/database-processor');
+const logicController = require('./logic-controller');
 
 class ViewController {
     getAdmin(req, res) {
-        res.render('admin');
+        return res.render('admin', { title: 'Admin Page' });
     }
 
     getLogin(req, res) {
-        res.render('login');
+        res.render('login', { title: 'Login Page' });
     }
     
     async getSetup(req, res) {
-        const db = new Database();
         try {
-            await db.connect();
-            const hasUsers = await db.checkUserTable();
-            if (!hasUsers) {
+            const hasUsers = await logicController.databaseProcessor.data.get('users');
+            if (hasUsers.length === 0) {
                 return res.render('setup', { title: 'Setup Page', step: 3 });
             }
             return res.render('setup', { title: 'Setup Page', step: 2 });
