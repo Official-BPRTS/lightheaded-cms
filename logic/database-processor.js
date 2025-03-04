@@ -1,13 +1,13 @@
 const mysql = require('mysql2');
 require('dotenv').config();
 
-class Database {
+class DatabaseProcessor {
     constructor() {
         this.connection = mysql.createConnection({
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
             password: process.env.DB_PASS,
-            database: process.env.DB_NAME
+            database: process.env.DB_NAME 
         });
 
         const createTableQuery = `
@@ -52,4 +52,4 @@ class Database {
     }
 }
 
-module.exports = Database;
+module.exports = DatabaseProcessor;

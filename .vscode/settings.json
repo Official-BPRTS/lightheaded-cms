@@ -14,5 +14,6 @@
             "username": "bprtscom_bprtscom",
             "database": "bprtscom_headless_cms"
         }
-    ]
+    ],
+    "editor.fontFamily": "Fira Code"
 }

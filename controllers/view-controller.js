@@ -1,4 +1,4 @@
-const Database = require('../logic/database');
+const Database = require('../logic/database-processor');
 
 class ViewController {
     getAdmin(req, res) {
