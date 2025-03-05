@@ -4,12 +4,12 @@ const favicon = require('serve-favicon');
 const bodyParser = require('body-parser');
 const path = require('path');
 const viewRoutes = require('./routes/view-routes');
-const Database = require('./logic/database-processor');
+const DatabaseController = require('./controllers/database-controller');
 
 const app = express();
 const port = 3000;
 
-const db = new Database();
+const db = new DatabaseController();
 
 app.set('view engine', 'ejs');
 app.set('layout', '_layout');

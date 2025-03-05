@@ -36,7 +36,6 @@ button {
     font-size: medium;
     font-size: 17.5px;
     padding: 12px;
-    cursor: pointer;
 }
 
 .center-div {
@@ -48,9 +47,11 @@ button {
 }
 
 form {
-    display: flex;
-    flex-direction: column;
     row-gap: 15px;
+}
+
+label {
+    color: white;
 }
 
 .logo-large {
@@ -72,4 +73,20 @@ form {
     font-weight: bold;
 }
 
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
 
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.clickable {
+    cursor: pointer;
+}

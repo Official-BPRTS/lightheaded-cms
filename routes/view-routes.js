@@ -1,10 +1,11 @@
 const express = require('express');
 const ViewController = require('../controllers/view-controller');
+const AccountController = require('../controllers/account-controller');
 const auth = require('../middleware/auth');
 const User = require('../middleware/user');
-const logicController = require('../controllers/logic-controller');
 
 const viewController = new ViewController();
+const accountController = new AccountController();
 const user = new User();
 
 const router = express.Router();
@@ -22,7 +23,7 @@ router.post('/register', (req, res) => {
     if (password !== confirmPassword) {
         return res.status(400).send('Passwords do not match');
     }
-    logicController.accountProcessor.register(username, password, email);
+    accountController.register(username, password, email);
 });
 
 module.exports = router;

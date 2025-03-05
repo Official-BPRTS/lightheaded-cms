@@ -1,5 +1,8 @@
-const mysql = require('mysql2');
 require('dotenv').config();
+const DataBaseModel = require('../models/database-model');
+const mysql = require('mysql2');
+
+const databaseModel = DataBaseModel;
 
 class DatabaseProcessor {
     constructor() {
@@ -7,133 +10,145 @@ class DatabaseProcessor {
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
             password: process.env.DB_PASS,
-            database: process.env.DB_NAME 
+            database: process.env.DB_NAME
         });
 
         this.connection = {
-            connect: this.connect.bind(this),
-            disconnect: this.disconnect.bind(this)
-        };
-
-        this.tables = {
-            create: this.createTable.bind(this),
-            remove: this.removeTable.bind(this)
-        };
-
-        this.data = {
-            add: this.addData.bind(this),
-            remove: this.removeData.bind(this),
-            get: this.getData.bind(this),
-            update: this.updateData.bind(this)
-        };
-    }
-
-    connect() {
-        this.db.connect(err => {
-            if (err) {
-                console.error('Error connecting to the database:', err);
-                return;
-            }
-            console.log('Connected to the database');
-        });
-    }
-
-    disconnect() {
-        this.db.end(err => {
-            if (err) {
-                console.error('Error disconnecting from the database:', err);
-                return;
-            }
-            console.log('Disconnected from the database');
-        });
-    }
-
-    createTable(tableName, columns) {
-        const createTableQuery = `
-            CREATE TABLE IF NOT EXISTS ${tableName} (
-                ${columns.join(', ')}
-            ) Engine=InnoDB DEFAULT CHARSET=utf8;
-        `;
-        this.db.query(createTableQuery, (err, results) => {
-            if (err) {
-                console.error(`Error creating the ${tableName} table:`, err);
-                return;
-            }
-            console.log(`${tableName} table created successfully`);
-        });
-    }
-
-    removeTable(tableName) {
-        const removeTableQuery = `DROP TABLE IF EXISTS ${tableName}`;
-        this.db.query(removeTableQuery, (err, results) => {
-            if (err) {
-                console.error(`Error removing the ${tableName} table:`, err);
-                return;
-            }
-            console.log(`${tableName} table removed successfully`);
-        });
-    }
-
-    addData(tableName, data) {
-        const addDataQuery = `INSERT INTO ${tableName} SET ?`;
-        try {
-            const [results] = this.db.query(addDataQuery, data);
-            console.log(`Data added to the ${tableName} table successfully`);
-            return results.insertId;
-        } catch (err) {
-            console.error(`Error adding data to the ${tableName} table:`, err);
-            throw err;
+            connect: () => {
+                return new Promise((resolve, reject) => {
+                    this.db.connect(err => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve('Connected to the database');
+                    });
+                });
+            },
+    
+            disconnect: () => {
+                return new Promise((resolve, reject) => {
+                    this.db.end(err => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve('Disconnected from the database');
+                    });
+                });
+            },
         }
-    }
-
-    removeData(tableName, data) {
-        const removeDataQuery = `
-            DELETE FROM ${tableName} WHERE ?
-        `;
-        this.db.query(removeDataQuery, data, (err, results) => {
-            if (err) {
-                console.error(`Error removing data from the ${tableName} table:`, err);
-                return;
-            }
-            console.log(`Data removed from the ${tableName} table successfully`);
-        });
-    }
-
-    getData(tableName, data) {
-        return new Promise((resolve, reject) => {
-            let getDataQuery;
-            let queryParams;
     
-            if (data && Object.keys(data).length > 0) {
-                getDataQuery = `SELECT * FROM ${tableName} WHERE ?`;
-                queryParams = data;
-            } else {
-                getDataQuery = `SELECT * FROM ${tableName}`;
-                queryParams = [];
-            }
+        this.tables = {
+            create: (tableName, columns) => {
+                return new Promise((resolve, reject) => {
+                    const createTableQuery = `
+                    CREATE TABLE IF NOT EXISTS ${tableName} (
+                    ${columns.join(', ')}
+                    ) Engine=InnoDB DEFAULT CHARSET=utf8;
+                     `;
+                     this.db.query(createTableQuery, (err, results) => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve(tableName);
+                    });
+                });
+            },
     
-            this.db.query(getDataQuery, queryParams, (err, results) => {
-                if (err) {
-                    console.error(`Error getting data from the ${tableName} table:`, err);
-                    return reject(err);
-                }
-                console.log(`Data retrieved from the ${tableName} table successfully`);
-                resolve(results);
-            });
-        });
-    }
-
-    updateData(tableName, data) {
-        const updateDataQuery = `
-            UPDATE ${tableName} SET ? WHERE ?
-        `;
-        this.db.query(updateDataQuery, data, (err, results) => {
-            if (err) {
-                console.error(`Error updating data in the ${tableName} table:`, err);
-                return;
+            remove: (tableName) => {
+                return new Promise((resolve, reject) => {
+                    const removeTableQuery = `DROP TABLE IF EXISTS ${tableName}`;
+                    this.db.query(removeTableQuery, (err, results) => {
+                        if (err) {
+                            reject(err);
+                        }
+                        resolve(tableName);
+                    });
+                });
             }
-            console.log(`Data updated in the ${tableName} table successfully`);
-        });
+        }
+    
+        this.data = {
+            add: (model) => {
+                return new Promise((resolve, reject) => {
+                    const { tableName, data } = model;
+                    const query = `INSERT INTO ${tableName} SET ?`;
+                    this.db.query(query, data, (err, results) => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve(results.insertId);
+                    });
+                })
+            },
+
+            remove: (tableName, data) => {
+                return new Promise((resolve, reject) => {
+                    const removeDataQuery = `
+                    DELETE FROM ${tableName} WHERE ?
+                    `;
+                    this.db.query(removeDataQuery, data, (err, results) => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve(`${tableName} removed successfully`);
+                    });
+                });
+            },
+            
+            // Get data from the database
+            // tableName: The name of the table to get data from
+            // dataType: The type of data to send in the query (e.g. 'username', 'email', etc.)
+            // dataValue: The value of the data to send in the query (e.g. 'john_doe', '
+            // returnType: The type of data that you want returned (e.g. 'username', 'email', etc.)
+            // returnValue: The value of the data that you want returned (e.g. 'john_doe', '
+
+            get: (model) => {
+                return new Promise((resolve, reject) => {
+                    const { tableName, data, returnType = [] } = model;
+                    let query;
+                    let queryParams =[];
+
+                    if (data && data.type && data.value) {
+                        const dataType = data.type;
+                        const dataValue = data.value;
+
+                        if (returnType.length > 0) {
+                            query = `SELECT ${returnType.join(', ')} FROM ${tableName} WHERE ${dataType} = ?`;
+                        } else {
+                            query = `SELECT * FROM ${tableName} WHERE ${dataType} = ?`;
+                        }
+                        queryParams = [dataValue];
+                    } else {
+                        if (returnType.length > 0) {
+                            query = `SELECT ${returnType.join(', ')} FROM ${tableName}`;
+                        } else {
+                            query = `SELECT * FROM ${tableName}`;
+                        }
+                    }
+                    
+                    this.db.query(query, queryParams, (err, results) => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve(results);
+                    });
+                });
+            },
+    
+            update: (tableName, data) =>{
+                return new Promise((resolve, reject) => {
+                    const updateDataQuery = `
+                    UPDATE ${tableName} SET ? WHERE ?
+                    `;
+                    this.db.query(updateDataQuery, data, (err, results) => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve(`${tableName} updated successfully`);
+                    });
+                });
+            }
+        }
     }
 }
 

@@ -1,0 +1,24 @@
+<div class="center-div">
+    <img class="logo-large" src="/assets/images/LH-Color.svg" alt="">
+    <h1>Welcome</h1>
+    <h2>Login User</h2>
+    <form class="setup-form flex-column" action="/login" method="POST">
+        <div class="flex-column">
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" placeholder="Username">
+        </div>
+        <div class="flex-column">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" placeholder="Email">
+        </div>
+        <div class="flex-column">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" placeholder="Password">
+        </div>
+        <div class="flex-row space-between">
+            <label for="remember">Remember me</label>
+            <input class="clickable" type="checkbox" name="remember" id="remember">
+        </div>
+            <button class="main-button clickable" type="submit">Log in</button>
+    </form>
+</div>
